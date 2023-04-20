@@ -1,0 +1,18 @@
+Your team at JPMorgan Chase is soon launching a new credit card. You are asked to estimate how many cards you'll issue in the first month.
+
+Before you can answer this question, you want to first get some perspective on how well new credit card launches typically do in their first month.
+
+Write a query that outputs the name of the credit card, and how many cards were issued in its launch month. The launch month is the earliest record in the monthly_cards_issued table for a given card. Order the results starting from the biggest issued amount.
+
+
+Solution:
+
+Using cte, create a table card_launch in which i will have issue_date using make_date function(year,month,1)  and will get minimum_issue_date column of it using min() function.
+Then, I will use partition by with card_name.
+Now our CTE is ready
+with this CTE i will query the required credentials that is card_name, issue_amount giving the condition as issue_date = launch_date order by issue_amount
+
+with card_launch as
+(select card_name, issue_amount, Make_date(issue_year,issue_month,1) as issue_date, min(Make_date(issue_year,issue_month,1)) as min_issue_date over (partition by card_name)
+from monthly_card_issued) 
+select card_name, issue_amount where issue_date = min_issue_date order by issue_amount desc;
